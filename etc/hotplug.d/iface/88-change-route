@@ -1,0 +1,25 @@
+if [ "$INTERFACE" = "wan" ] && [ "$ACTION" = "ifup" ]; then
+	wan_gw=$(ifstatus wan | grep nexthop | grep -v '0.0.0.0' | awk -F\" '{print $4}')
+	bash /script/ACTION.sh add_route_to_table $wan_gw wan 100
+	bash /script/ACTION.sh add_route_to_table $wan_gw cn 100
+	bash /script/ACTION.sh add_route_to_table $wan_gw vpn 100
+
+fi
+
+if [ "$INTERFACE" = "wwan" ] && [ "$ACTION" = "ifup" ]; then
+    wan_gw=$(ifstatus wwan | grep nexthop | grep -v '0.0.0.0' | awk -F\" '{print $4}')
+    bash /script/ACTION.sh add_route_to_table $wan_gw wan 200
+    bash /script/ACTION.sh add_route_to_table $wan_gw cn 200
+    bash /script/ACTION.sh add_route_to_table $wan_gw vpn 200
+fi
+
+
+if [ "$INTERFACE" = "l2" ] && [ "$ACTION" = "ifup" ]; then
+    l2_gw=$(ifstatus l2 | grep nexthop | grep -v '0.0.0.0' | awk -F\" '{print $4}')
+    bash /script/ACTION.sh add_route_to_table $l2_gw vpn 2
+    bash /script/ACTION.sh changeDNS
+fi
+
+if [ "$INTERFACE" = "l2" ] && [ "$ACTION" = "ifdown" ]; then
+    bash /script/ACTION.sh changeDNS_BAK
+fi

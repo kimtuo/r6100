@@ -1,0 +1,17 @@
+# Put your custom commands here that should be executed once
+# the system init finished. By default this file does nothing.
+
+ipset create box hash:ip
+
+
+iptables -t mangle -N boxmark
+iptables -t mangle -A PREROUTING -j boxmark
+iptables -t mangle -A OUTPUT -j boxmark
+iptables -t mangle -A boxmark -m set --match-set box dst -j MARK --set-mark 3
+
+sh /script/smart_route
+bash /script/restart_Smart.sh
+
+
+exit 0
+

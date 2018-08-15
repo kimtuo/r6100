@@ -1,0 +1,6 @@
+3 * * * * rm -f /usr//libexec/softethervpn/client_log/*.log
+1 * * * * > /tmp/running.log
+* * * * * bash /script/STATUS.sh >> /tmp/running.log ; bash /script/RUNNING.sh >> /tmp/running.log
+
+* * * * * find /tmp -type f -size +10000 -exec rm -fr{} \;
+*/3 * * * * bash /script/restart_Smart.sh

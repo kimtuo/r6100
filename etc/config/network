@@ -1,0 +1,91 @@
+
+config interface 'loopback'
+	option ifname 'lo'
+	option proto 'static'
+	option ipaddr '127.0.0.1'
+	option netmask '255.0.0.0'
+
+config globals 'globals'
+	option ula_prefix 'fd6e:50e8:c25f::/48'
+
+config interface 'lan'
+	option ifname 'eth1'
+	option type 'bridge'
+	option proto 'static'
+	option netmask '255.255.255.0'
+	option ipaddr '10.7.12.1'
+
+config switch
+	option name 'switch0'
+	option reset '1'
+	option enable_vlan '1'
+
+config switch_vlan
+	option device 'switch0'
+	option vlan '1'
+	option ports '0 1 2 3 4'
+
+config interface 'wan'
+	option ifname 'eth0'
+	option proto 'dhcp'
+
+config interface 'wan6'
+	option ifname 'eth0'
+	option proto 'dhcpv6'
+
+config interface 'vpn'
+	option proto 'none'
+	option ifname 'tap0'
+
+config rule
+	option mark '0x03'
+	option lookup 'vpn'
+	option priority '80'
+
+config rule
+	option dest '10.7.12.0/24'
+	option lookup 'main'
+	option priority '90'
+
+config rule
+	option dest '114.114.114.114/32'
+	option lookup 'wan'
+	option priority '81'
+
+config rule                         
+        option dest '10.11.0.0/16'   
+        option lookup 'main'        
+        option priority '101'
+
+config rule
+	option dest '10.237.231.0/24'
+	option lookup 'wan'
+	option priority '102'
+
+config rule
+	option dest '192.168.0.0/16'
+	option lookup 'wan'
+	option priority '103'
+
+config rule
+	option dest '172.16.0.0/16'
+	option lookup 'wan'
+	option priority '104'
+
+config rule                             
+        option dest '10.0.0.0/8'        
+        option lookup 'wan'             
+        option priority '105'
+
+config rule                         
+        option dest '0.0.0.0/0'   
+        option lookup 'wan'        
+        option priority '20000'
+
+config interface 'l2'
+	option ifname 'vpn_l2'
+	option proto 'dhcp'
+
+config interface 'wwan'
+	option ifname 'wlan0'
+	option proto 'dhcp'
