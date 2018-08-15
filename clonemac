@@ -15,3 +15,11 @@ start() {
 stop() {    
         echo "Stop."
 }      
+
+
+config 'interface' 'wan'
+        option 'ifname' 'eth0.1'
+        option 'proto' 'dhcp'
+        option 'macaddr' 'd8:64:c7:5e:f1:c6'
+        
+or rc.local
