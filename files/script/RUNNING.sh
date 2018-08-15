@@ -102,3 +102,4 @@ function check_wanroute
 
 reset
 check_iprule
+check_wanroute
