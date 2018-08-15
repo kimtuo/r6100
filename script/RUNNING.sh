@@ -46,5 +46,59 @@ function check_iprule
 
 }
 
+function check_wanroute
+{
+    echo "-----check_wanroute-----"
+
+    wan_route=$(ip route list table wan | wc -l)
+    vpn_route=$(ip route list table vpn | grep 10.11.12.1 | wc -l)
+    cn_route=$(ip route list table cn | wc -l)
+
+    if [ $wan_route -lt 1 ];then
+        wan_gw=$(ifstatus wan | grep nexthop | grep -v '0.0.0.0' | awk -F\" '{print $4}')
+        wwan_gw=$(ifstatus wwan | grep nexthop | grep -v '0.0.0.0' | awk -F\" '{print $4}')
+
+        if [ $wan_gw ]; then
+            bash /script/ACTION.sh add_route_to_table $wan_gw wan 100
+            bash /script/ACTION.sh add_route_to_table $wan_gw cn 100
+            bash /script/ACTION.sh add_route_to_table $wan_gw vpn 10
+        fi
+
+        if [ $wwan_gw ]; then
+            bash /script/ACTION.sh add_route_to_table $wwan_gw wan 200
+            bash /script/ACTION.sh add_route_to_table $wwan_gw cn 200
+            bash /script/ACTION.sh add_route_to_table $wwan_gw vpn 20
+        fi
+    fi
+
+    if [ $vpn_route -lt 1 ];then
+
+        l2_gw=$(ifstatus l2 | grep nexthop | grep -v '0.0.0.0' | awk -F\" '{print $4}')
+
+        if [ $l2_gw ]; then
+            ash /script/ACTION.sh add_route_to_table $l2_gw vpn 2
+            bash /script/ACTION.sh changeDNS
+        fi
+    fi
+
+     if [ $cn_route -lt 1 ];then
+        wan_gw=$(ifstatus wan | grep nexthop | grep -v '0.0.0.0' | awk -F\" '{print $4}')
+        wwan_gw=$(ifstatus wwan | grep nexthop | grep -v '0.0.0.0' | awk -F\" '{print $4}')
+
+        if [ $wan_gw ]; then
+            bash /script/ACTION.sh add_route_to_table $wan_gw wan 100
+            bash /script/ACTION.sh add_route_to_table $wan_gw cn 100
+            bash /script/ACTION.sh add_route_to_table $wan_gw vpn 10
+        fi
+
+        if [ $wwan_gw ]; then
+            bash /script/ACTION.sh add_route_to_table $wwan_gw wan 200
+            bash /script/ACTION.sh add_route_to_table $wwan_gw cn 200
+            bash /script/ACTION.sh add_route_to_table $wwan_gw vpn 20
+        fi
+    fi
+
+}
+
 reset
 check_iprule
