@@ -79,6 +79,11 @@ config rule
 
 config rule                         
         option dest '0.0.0.0/0'   
+        option lookup 'vpn'        
+        option priority '19000'
+
+config rule                         
+        option dest '0.0.0.0/0'   
         option lookup 'wan'        
         option priority '20000'
 
