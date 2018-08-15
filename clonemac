@@ -1,0 +1,17 @@
+root@R6100:/etc/config# vi /etc/init.d/clonemac
+
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2014 OpenWrt.org
+
+START=94
+STOP=15
+
+start() {
+        ifconfig eth1 down
+        ifconfig eth1 hw ether  DC:EF:09:F2:13:70
+        ifconfig eth1 up
+}           
+
+stop() {    
+        echo "Stop."
+}      
